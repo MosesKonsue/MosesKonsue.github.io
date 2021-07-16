@@ -58,9 +58,9 @@ plugins:
   - jekyll-include-cache
 
 author:
-  name   : "First Lastname"
+  name   : "Moses Konsue"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "2021 Forensics Science graduate of the University of Kent"
+  bio    : "2021 Forensics Science graduate of the University of Kent. Diving into the world of Cybersecurity."
   links:
     - label: "Website"
       icon: "fas fa-fw fa-link"

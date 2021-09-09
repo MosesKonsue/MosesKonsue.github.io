@@ -10,11 +10,10 @@ tags:
   - Patch Management
   - Web
 ---
-<h1>Valentine</h1>
-
 Enumeration:
 nmap:
-'22/tcp  open  ssh      syn-ack OpenSSH 5.9p1 Debian 5ubuntu1.10 (Ubuntu Linux; protocol 2.0)
+```yaml
+22/tcp  open  ssh      syn-ack OpenSSH 5.9p1 Debian 5ubuntu1.10 (Ubuntu Linux; protocol 2.0)
 80/tcp  open  http     syn-ack Apache httpd 2.2.22 ((Ubuntu))
 | http-methods: 
 |_  Supported Methods: GET HEAD POST OPTIONS
@@ -26,7 +25,9 @@ nmap:
 |_http-server-header: Apache/2.2.22 (Ubuntu)
 |_http-title: Site doesn't have a title (text/html).
 | ssl-cert: Subject: commonName=valentine.htb/organizationName=valentine.htb/stateOrProvinceName=FL/countryName=US
-| Issuer: commonName=valentine.htb/organizationName=valentine.htb/stateOrProvinceName=FL/countryName=US'
+| Issuer: commonName=valentine.htb/organizationName=valentine.htb/stateOrProvinceName=FL/countryName=US
+```
+
 
 we find domain valentine.htb, Apache/2.2.22, OpenSSH 5.9p1, Debian 5ubuntu1.10 (Ubuntu Linux; protocol 2.0)
 

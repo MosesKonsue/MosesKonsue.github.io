@@ -56,7 +56,8 @@ plugins:
   - jekyll-feed
   - jemoji
   - jekyll-include-cache
-
+atom_feed:
+  hide: true
 author:
   name   : "Moses Konsue"
   avatar : "/assets/images/bio-photo.jpg"

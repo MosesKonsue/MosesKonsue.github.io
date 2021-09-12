@@ -8,6 +8,7 @@ tags:
   - HacktheBox
   - Patch Management
   - Web
+classes: wide
 ---
 
 <h2>Enumeration:</h2>

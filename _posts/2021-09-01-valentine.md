@@ -58,7 +58,7 @@ I realised that I have never really looked up what ssl/http actually refers to.
 ```
 
 
-The /dev directory looks suspicious, looking inside we see a notes.txt and hype_key file.
+The /dev directory looks suspicious, looking inside we see a notes.txt and hype_key file. I download them both.
 The notes file says:
 
 ```

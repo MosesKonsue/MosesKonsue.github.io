@@ -10,7 +10,7 @@ tags:
   - Web
 classes: wide
 ---
-
+Valentine is a easy rated retired box released in 2018 from [HackTheBox](https://app.hackthebox.eu/machines/Valentine). 
 <h2>Enumeration:</h2>
 Nmap scan results:
 
@@ -31,14 +31,18 @@ Nmap scan results:
 ```
 
 <h4>What is the scan telling us?</h4>
-- 22
-- 80
-- 443
-- we find domain valentine.htb, Apache/2.2.22, OpenSSH 5.9p1, Debian 5ubuntu1.10 (Ubuntu Linux; protocol 2.0)
+- Port 22 OpenSSH 5.9p1 on Ubuntu linux. 
+- Port 80 is running Apache/2.2.22 webserver. This means dirbuster/gobuster and nikto are our next scans.
+- Port 443 is running ssl/http Apache 2.2.22 which is secure socket layer over HTTP. Also known as HTTP Secure or HTTPS. So an HTTPS port for the apache web server. 
+- These services are utilising syn-ack 3 way TCP handshakes.
+- We also see the domain valentine.htb and just in case we add valentine.htb to our /etc/hosts file.
 
-We add valentine.htb to our /etc/hosts file.
+> I realised that have never really looked up what ssl/http actually refers to. *Information that travels on the port 443 is encrypted using Secure Sockets Layer (SSL) or its new version, Transport Layer Security (TLS) and hence safer*. 
+> According to [wikipedia](https://en.wikipedia.org/wiki/Transport_Layer_Security#Key_exchange_or_key_agreement) TSL works by handshake protocol and key/cipher combinations. *"Before a client and server can begin to exchange information protected by TLS, they must securely exchange or agree upon an encryption key and a cipher to use when encrypting data".*
 
-gobuster:
+Nikto finds nothing of note.
+
+Gobuster:
 
 ```
 /index (Status: 200)
@@ -50,6 +54,7 @@ gobuster:
 /decode.php (Status: 200)
 /omg (Status: 200)
 ```
+
 
 The /dev directory looks suspicious, looking inside we see a notes.txt and hype_key file.
 The notes file says:
@@ -69,10 +74,17 @@ Being completely stuck, we check the writeup!
 
 <h2>Foothold</h2>
 
-It seems that this particular version of openssl is vulnerable to the mighty known heartbleed bug:
-The Heartbleed Bug is a serious vulnerability in the popular OpenSSL cryptographic software library. This weakness allows stealing the information protected, under normal conditions, by the SSL/TLS encryption used to secure the Internet. SSL/TLS provides communication security and privacy over the Internet for applications such as web, email, instant messaging (IM) and some virtual private networks (VPNs).
+It seems that this particular version of openssl is vulnerable to the well known heartbleed bug, it even has its own [website](https://heartbleed.com/) which says:
+> *"The Heartbleed Bug is a serious vulnerability in the popular OpenSSL cryptographic software library. This weakness allows stealing the information protected, under normal conditions, by the SSL/TLS encryption used to secure the Internet. SSL/TLS provides communication security and privacy over the Internet for applications such as web, email, instant messaging (IM) and some virtual private networks (VPNs)."*
 
-We google around and find https://github.com/sensepost/heartbleed-poc. We set the -n flag to 2 and coincidentally seem to get a base64 encoded password
+[Wikipedia](https://en.wikipedia.org/wiki/Heartbleed) has further details and refers to heartbleed as **CVE-2014-0160**:
+>*" It resulted from improper input validation (due to a missing bounds check) in the implementation of the TLS heartbeat extension.[3] Thus, the bug's name derived from heartbeat. The vulnerability was classified as a buffer over-read, a situation where more data can be read than should be allowed."*
+
+The heartbeat extension for TLS seems to have been developed as a way to *"test and keep alive secure communication links without the need to renegotiate the connection each time.*" However crafting packets that would request information that was normal to request, and then additional information that should have been refused. However heartbeat had improper input validation, so did not check if the request contained harmful requests. 
+
+It seems that the exploits surronding this simply request an additional packets at random. Whatever was being processed by the server at the time. This means that multiple requests need to be made and combed through manually or through unique sorting to determine what information was gained through the exploit. 
+
+We google around and find https://github.com/sensepost/heartbleed-poc which explains that these tools are outdated and that there are metasploit and burp versions of this exploit which may be easier. I felt like trying this python script and thus I run it against our box and see that I don't really seem to get much on the first 10 runs of it. Reading the github we see options to increase the number of heartbeats to send with `-n`.  I try again and set the `-n` flag to 2 and coincidentally seem to get a base64 encoded password
 
 ```
 /decode.php..Co
@@ -86,11 +98,11 @@ We google around and find https://github.com/sensepost/heartbleed-poc. We set th
   0160: 67 27 97 21 D5 BF BB 29 64 4B 9E BB FB 2F D9 65  g'.!...)dK.../.e
 ```
 
-which base64 decodes to heartbleedbelievethehype
+The password is in the form of "aGVhcnRibGVlZGJlbGlldmV0aGVoeXBlCg==" which base64 decodes to heartbleedbelievethehype.
 
-we try to ssh as user hype and we get in!
+With this password we try to ssh as user hype with the file hype_key and we get in!
 
-flag is found on hype desktop.
+The user flag is found on hype desktop.
 
 <h2>Privilege Escalation</h2>
 
@@ -98,9 +110,9 @@ flag is found on hype desktop.
 hype@Valentine:~/Desktop$ id
 uid=1000(hype) gid=1000(hype) groups=1000(hype),24(cdrom),30(dip),46(plugdev),124(sambashare)
 ```
-can't cat shadow or passwd.
+From here I try the usual, it seems we can't cat shadow or passwd, crontab doesn't seem to reveal any cronjobs that are exploitable to my eye.
 
-Running linpeas shows an active tmux terminal /.devs/dev_sess​ running. we run tmux -S /.devs/dev_sess to attach to a shared session. It seems that the root user started a shared tmux session with root access. From here we have root, and can cat from /root/root.txt
+Next step, running linpeas shows a shared tmux session /.devs/dev_sess running. we run `tmux -S /.devs/dev_sess` to attach to a shared session. It seems that the root user started a shared tmux session, which by nature of being started by the root user had root permissions. From here we have root, and can `cat /root/root.txt` to obtain the root flag. 
 
 <h4>For next time:</h4>
 - If an sshkey has x_key x is the user.

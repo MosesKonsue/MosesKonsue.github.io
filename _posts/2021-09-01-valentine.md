@@ -12,7 +12,8 @@ classes: wide
 ---
 Valentine is a easy rated retired box released in 2018 from [HackTheBox](https://app.hackthebox.eu/machines/Valentine). 
 <h2>Enumeration:</h2>
-Nmap scan results:
+
+**Nmap scan results:**
 
 ```
 22/tcp  open  ssh      syn-ack OpenSSH 5.9p1 Debian 5ubuntu1.10 (Ubuntu Linux; protocol 2.0)
@@ -37,12 +38,13 @@ Nmap scan results:
 - These services are utilising syn-ack 3 way TCP handshakes.
 - We also see the domain valentine.htb and just in case we add valentine.htb to our /etc/hosts file.
 
-> I realised that have never really looked up what ssl/http actually refers to. *Information that travels on the port 443 is encrypted using Secure Sockets Layer (SSL) or its new version, Transport Layer Security (TLS) and hence safer*. 
+I realised that I have never really looked up what ssl/http actually refers to.
+> [Parablu.com](https://parablu.com/what-is-port-443-and-why-it-is-imperative-to-your-dr-plan/) says: *Information that travels on the port 443 is encrypted using Secure Sockets Layer (SSL) or its new version, Transport Layer Security (TLS) and hence safer*. 
 > According to [wikipedia](https://en.wikipedia.org/wiki/Transport_Layer_Security#Key_exchange_or_key_agreement) TSL works by handshake protocol and key/cipher combinations. *"Before a client and server can begin to exchange information protected by TLS, they must securely exchange or agree upon an encryption key and a cipher to use when encrypting data".*
 
-Nikto finds nothing of note.
+**Nikto** finds nothing of note.
 
-Gobuster:
+**Gobuster:**
 
 ```
 /index (Status: 200)
@@ -70,21 +72,23 @@ To do:
 6) Find a better way to take notes.
 ```
 
-Being completely stuck, we check the writeup!
+Being completely stuck, we check the HTB writeup!
 
 <h2>Foothold</h2>
 
-It seems that this particular version of openssl is vulnerable to the well known heartbleed bug, it even has its own [website](https://heartbleed.com/) which says:
+It seems that this particular version of openssl is vulnerable to the well known heartbleed bug, it even has its own [website](https://heartbleed.com/) by the Synopsys Software Integrity Group which says:
 > *"The Heartbleed Bug is a serious vulnerability in the popular OpenSSL cryptographic software library. This weakness allows stealing the information protected, under normal conditions, by the SSL/TLS encryption used to secure the Internet. SSL/TLS provides communication security and privacy over the Internet for applications such as web, email, instant messaging (IM) and some virtual private networks (VPNs)."*
 
 [Wikipedia](https://en.wikipedia.org/wiki/Heartbleed) has further details and refers to heartbleed as **CVE-2014-0160**:
 >*" It resulted from improper input validation (due to a missing bounds check) in the implementation of the TLS heartbeat extension.[3] Thus, the bug's name derived from heartbeat. The vulnerability was classified as a buffer over-read, a situation where more data can be read than should be allowed."*
 
-The heartbeat extension for TLS seems to have been developed as a way to *"test and keep alive secure communication links without the need to renegotiate the connection each time.*" However crafting packets that would request information that was normal to request, and then additional information that should have been refused. However heartbeat had improper input validation, so did not check if the request contained harmful requests. 
+The heartbeat extension for TLS seems to have been developed as a way to *"test and keep alive secure communication links without the need to renegotiate the connection each time.*". The way it works from my understanding (reading wikipedia) is that a client can send a Heartbeat Request message with a payload as well as the payload's length. The server would then send the exact same payload back. 
 
-It seems that the exploits surronding this simply request an additional packets at random. Whatever was being processed by the server at the time. This means that multiple requests need to be made and combed through manually or through unique sorting to determine what information was gained through the exploit. 
+The Heartbleed bug (which is a great play on heartbeat) would exploit this by sending a request with a small payload and a large payload length. The server would then send the payload back, and then whatever characters it had in active memory to the client to fit the payload length. It would do this because of bounds checking failure. The limit to this seems to be 64kb due to 16-bit integer payload size limits. 
 
-We google around and find https://github.com/sensepost/heartbleed-poc which explains that these tools are outdated and that there are metasploit and burp versions of this exploit which may be easier. I felt like trying this python script and thus I run it against our box and see that I don't really seem to get much on the first 10 runs of it. Reading the github we see options to increase the number of heartbeats to send with `-n`.  I try again and set the `-n` flag to 2 and coincidentally seem to get a base64 encoded password
+> Wikipedia continues: *"Where a Heartbeat Request might ask a party to "send back the four-letter word 'bird'", resulting in a response of "bird", a "Heartbleed Request" of "send back the 500-letter word 'bird'" would cause the victim to return "bird" followed by whatever 496 subsequent characters the victim happened to have in active memory. Attackers in this way could receive sensitive data, compromising the confidentiality of the victim's communications. Although an attacker has some control over the disclosed memory block's size, it has no control over its location, and therefore cannot choose what content is revealed*
+
+We google around and find https://github.com/sensepost/heartbleed-poc which explains that these tools are outdated and that there are metasploit and burp versions of this exploit which may be easier. I felt like trying this python script and thus I run it against our box. However I don't really seem to get much on the first 10 runs of it, the cause of which I understand because of the great background reading from earlier. Reading the github we see options to increase the number of heartbeats to send with `-n`.  I try again and set the `-n` flag to 2 and coincidentally seem to get a base64 encoded password. This could be automated to output the responses to a file and filter for unique strings. 
 
 ```
 /decode.php..Co
@@ -116,6 +120,6 @@ Next step, running linpeas shows a shared tmux session /.devs/dev_sess running. 
 
 <h4>For next time:</h4>
 - If an sshkey has x_key x is the user.
+- Nmap scans can run scripts, and can even check for heartbleed for you.
 - Pay attention to linpeas 95% highlights.
-- Read up on heartbleed.
 

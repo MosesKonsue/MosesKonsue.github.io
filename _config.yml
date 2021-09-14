@@ -61,7 +61,7 @@ atom_feed:
 author:
   name   : "Moses Konsue"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "2021 Forensics Science graduate of the University of Kent. Diving into the world of Cybersecurity."
+  bio    : "BSc of Forensic Science with First-Class honours from the University of Kent. Diving into the world of Cybersecurity."
   links:
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"

@@ -119,6 +119,7 @@ From here I try the usual, it seems we can't cat shadow or passwd, crontab doesn
 Next step, running linpeas shows a shared tmux session /.devs/dev_sess running. we run `tmux -S /.devs/dev_sess` to attach to a shared session. It seems that the root user started a shared tmux session, which by nature of being started by the root user had root permissions. From here we have root, and can `cat /root/root.txt` to obtain the root flag. 
 
 <h4>For next time:</h4>
+
 - If an sshkey has x_key x is the user.
 - Nmap scans can run scripts, and can even check for heartbleed for you.
 - Pay attention to linpeas 95% highlights.

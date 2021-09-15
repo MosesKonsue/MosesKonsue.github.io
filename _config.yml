@@ -61,7 +61,8 @@ atom_feed:
 author:
   name   : "Moses Konsue"
   avatar : "/assets/images/bio-photo.jpg"
-  bio    : "BSc of Forensic Science with First-Class Honours from the University of Kent. These are my personal notes while learning Cybersecurity."
+  bio    : "BSc of Forensic Science with First-Class Honours from the University of Kent. 
+  These are my personal notes while learning Cybersecurity."
   links:
     - label: "Twitter"
       icon: "fab fa-fw fa-twitter-square"

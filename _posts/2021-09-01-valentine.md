@@ -32,6 +32,7 @@ Valentine is a easy rated retired box released in 2018 from [HackTheBox](https:/
 ```
 
 <h4>What is the scan telling us?</h4>
+
 - Port 22 OpenSSH 5.9p1 on Ubuntu linux. 
 - Port 80 is running Apache/2.2.22 webserver. This means dirbuster/gobuster and nikto are our next scans.
 - Port 443 is running ssl/http Apache 2.2.22 which is secure socket layer over HTTP. Also known as HTTP Secure or HTTPS. So an HTTPS port for the apache web server. 

@@ -10,7 +10,8 @@ tags:
   - Web
 classes: wide
 ---
-Valentine is a easy rated retired box released in 2018 from [HackTheBox](https://app.hackthebox.eu/machines/Valentine). 
+Valentine is a easy rated retired box released in 2018 from [HackTheBox](https://app.hackthebox.eu/machines/Valentine).
+
 <h2>Enumeration:</h2>
 
 **Nmap scan results:**

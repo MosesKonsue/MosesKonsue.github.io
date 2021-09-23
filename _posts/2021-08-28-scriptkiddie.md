@@ -93,7 +93,7 @@ We see that `app.py` writes to `/home/kid/logs/hackers.`
 Reading app.py we see that it writes to the logs directory when non-alphanumeric characters are input into the website's SearchSploit field. 
 The writer assumes that submitted non-alpha characters represent an attempt to *"hacK"* them. So the script notes ip addresses of users who submit them in a log and run Nmap on them. 
 
-`scanlosers.sh` does not perform any input validation so we can perform "arbitrary OS command injection" by inputting our reverse shell in there. [Ippsec](https://youtu.be/Yn3iGF8xMQI?t=1979) does an excellent analysis of scanlosers.sh, after watching their video I now understand why our command would be executed.
+`scanlosers.sh` does not perform any input validation so we can perform "arbitrary OS command injection" by inputting our reverse shell in there. [Ippsec](https://youtu.be/Yn3iGF8xMQI?t=1979) does an excellent analysis of `scanlosers.sh`, after watching their video I now understand why our command would be executed.
 
 ```bash
 #!/bin/bash

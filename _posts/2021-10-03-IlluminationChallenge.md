@@ -17,7 +17,7 @@ This is also a test of adding images to these posts, and doing challenge writeup
 ---
 
 First we unzip the challenge files with the provided password. 
-![First we unzip!](\assets\images\illumination\illu1.png "Unzipping the challenge files.")
+![First we unzip!](https://github.com/MosesKonsue/MosesKonsue.github.io/blob/master/assets/images/illumination/illu1.PNG "Unzipping the challenge files.")
 
 Next we have a look at what was inside the zip file. At first I forgot to run `ls -alh` which will list all files and directories including hidden ones. I nearly missed the .git directory, though I should have noticed it during unzipping anyway.
-![What do we have?](\assets\images\illumination\illu2.png "What do we have?")
+![What do we have?](https://github.com/MosesKonsue/MosesKonsue.github.io/blob/master/assets/images/illumination/illu2.PNG "What do we have?")

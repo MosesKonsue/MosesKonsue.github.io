@@ -9,7 +9,7 @@ tags:
   - Incident Response
 classes: wide
 ---
-Continuing the skill-set diversification, a retired incident response challenge from [Blue Team Labs Online.](https://blueteamlabs.online/home/challenge/7)
+Continuing the skill-set diversification, a medium rated retired incident response challenge from [Blue Team Labs Online.](https://blueteamlabs.online/home/challenge/7)
 
 >*"Recently the networks of a large company named GothamLegend were compromised after an employee opened a phishing email containing malware. The damage caused was critical and resulted in business-wide disruption. GothamLegend had to reach out to a third-party incident response team to assist with the investigation. You are a member of the IR team - all you have is an encoded Powershell script. Can you decode it and identify what malware is responsible for this attack?*"
 

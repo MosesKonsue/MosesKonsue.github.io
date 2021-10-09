@@ -99,7 +99,7 @@ This took be quite a bit to figure out, but reading the line where HOME is prese
 
 `$Imd1yck=$HOMEUOHDb_bh30UOHYf5be5gUOHRePlACeUOH[StrInG][chAr]92`
 
-We see `replace uoh [string][char]92`. Looking at char 92 in an ascii table
+We see `replace uoh [string][char]92`. Looking at char 92 in an ASCII table:
 
 <img src="/assets/images/malpowerbtlo/mal6.PNG" alt="92 = \.">
 
@@ -107,23 +107,29 @@ So we can read `$HOMEUOHDb_bh30UOHYf5be5gUOH` as `\HOME\Db_bh30\Yf5be5g\`.
 
 <h4>What file is being downloaded (full name)?</h4>
 
-Looking back at our HOME line we see: `$HOMEUOHDb_bh30UOHYf5be5gUOHRePlACeUOH[StrInG][chAr]92$Swrp6tcdll;`. Since we now know that the directory the script creates is `\HOME\Db_bh30\Yf5be5g\` anything after `[StrInG][chAr]92` should be our downloaded file. 
+Looking back at our HOME line we see: 
+
+`$HOMEUOHDb_bh30UOHYf5be5gUOHRePlACeUOH[StrInG][chAr]92$Swrp6tcdll;`
+
+Since we now know that the directory the script creates is `\HOME\Db_bh30\Yf5be5g\` anything after `[StrInG][chAr]92` should be our downloaded file. 
 
 Thus `$Swrp6tcdll` is the downloaded file, dll seems to be the file extension. We can try `Swrp6tc.dll`. 
 
 However this is not correct. If we search for other references to `Swrp6tc` in the logs we find `$Swrp6tc=A69S;`, `$Swrp6tc` is a variable! This should have been obvious from the `$` sign in front of it. 
 
-We instead try `A69S.dll` which is correct!.
+We instead try `A69S.dll` which is correct!
 
 <h4>What is used to execute the downloaded file?</h4>
 
-Now that we know it is a dll file, we see `&rundll32` and see if `rundll32` is the exe used to execute the file. 
+Now that we know it is a dll file, we see `&rundll32$Imd1yckControl_RunDLLTOStRiNG;` and see if `rundll32` is the `.exe` used to execute the file. 
 
 It is correct!
 
 <h4>What is the domain name of the URI ending in ‘/6F2gd/’</h4>
 
-Searching through our logs we see the line `wmmcdevelopnet/content/6F2gd`. The URI doesn't make much sense without the `.` which we removed earlier. Heading back to CyberChef to add them back in we see: `wm.mcdevelop.net/content/6F2gd` meaning the answer is `wm.mcdevelop.net`.
+Searching through our logs we see the line `wmmcdevelopnet/content/6F2gd`. The URI doesn't make much sense without the `.` which we removed earlier through find/replace. 
+
+Heading back to CyberChef to add them back in we see: `wm.mcdevelop.net/content/6F2gd` meaning the answer is `wm.mcdevelop.net`.
 
 <h4>Based on the analysis of the obfuscated code, what is the name of the malware?</h4>
 

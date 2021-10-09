@@ -21,7 +21,9 @@ First we unzip the challenge:
 
 <img src="/assets/images/malpowerbtlo/mal1.PNG" alt="Unzipping the file.">
 
-Then have a look at the contents:
+Then have a look at the contents, `BTLO.txt` contains information about the challenge source and requests to not distribute. 
+
+Next we look at the actual challenge log `ps_script.txt`:
 
 <img src="/assets/images/malpowerbtlo/mal2.PNG" alt="Looking at the contents.">
 

@@ -19,11 +19,11 @@ The challenge has guided questions to answer to obtain points.
 
 First we unzip the challenge:
 
-<img src="/assets/images/malpowerbtlo/mal1.png" alt="Unzipping the file.">
+<img src="/assets/images/malpowerbtlo/mal1.PNG" alt="Unzipping the file.">
 
 Then have a look at the contents!:
 
-<img src="/assets/images/malpowerbtlo/mal2.png" alt="Looking at the contents.">
+<img src="/assets/images/malpowerbtlo/mal2.PNG" alt="Looking at the contents.">
 
 Welp.
 
@@ -44,15 +44,15 @@ These commands show that the powershell window was hidden with `-w hidden` and t
 
 We throw the output of the `.txt` file into GCHQ's CyberChef and convert from base64:
 
-<img src="/assets/images/malpowerbtlo/mal3.png" alt="Converting from base64.">
+<img src="/assets/images/malpowerbtlo/mal3.PNG" alt="Converting from base64.">
 
 It still looks pretty difficult to read, searching around the web suggests that we try and remove null bytes from the output like so:
 
-<img src="/assets/images/malpowerbtlo/mal4.png" alt="Removing null bytes.">
+<img src="/assets/images/malpowerbtlo/mal4.PNG" alt="Removing null bytes.">
 
 After removing null bytes these commands are still hard to read, more research suggests the use of CyberChef's `Generic Code Beautify`. From here we try to remove as much as we can through `find/replace` like so:
 
-<img src="/assets/images/malpowerbtlo/mal5.png" alt="Using Find/replace to remove seemingly useless items.">
+<img src="/assets/images/malpowerbtlo/mal5.PNG" alt="Using Find/replace to remove seemingly useless items.">
 
 The final result is shown below:
 
@@ -101,7 +101,7 @@ This took be quite a bit to figure out, but reading the line where HOME is prese
 
 We see `replace uoh [string][char]92`. Looking at char 92 in an ascii table
 
-<img src="/assets/images/malpowerbtlo/mal6.png" alt="92 = \.">
+<img src="/assets/images/malpowerbtlo/mal6.PNG" alt="92 = \.">
 
 So we can read `$HOMEUOHDb_bh30UOHYf5be5gUOH` as `\HOME\Db_bh30\Yf5be5g\`. 
 
@@ -129,4 +129,4 @@ Searching through our logs we see the line `wmmcdevelopnet/content/6F2gd`. The U
 
 Googling around for the `A69S.dll` we come across MalwarebBazaar's [database](https://bazaar.abuse.ch/sample/23be1cb22c94fe77cea5f8e7fef6710eeef5a23e7e7eb9b9dd53f56d1b954269/) which suggests that the malware name is `Emotet (aka Heodo)`. We try Emotet and are rewarded with challenge complete!
 
-<img src="/assets/images/malpowerbtlo/mal7.png" alt="https://blueteamlabs.online/achievement/share/challenge/14446/7">
+<img src="/assets/images/malpowerbtlo/mal7.PNG" alt="https://blueteamlabs.online/achievement/share/challenge/14446/7">

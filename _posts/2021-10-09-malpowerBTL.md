@@ -21,7 +21,7 @@ First we unzip the challenge:
 
 <img src="/assets/images/malpowerbtlo/mal1.PNG" alt="Unzipping the file.">
 
-Then have a look at the contents!:
+Then have a look at the contents:
 
 <img src="/assets/images/malpowerbtlo/mal2.PNG" alt="Looking at the contents.">
 

@@ -135,6 +135,6 @@ Heading back to CyberChef to add them back in we see: `wm.mcdevelop.net/content/
 
 <h4>Based on the analysis of the obfuscated code, what is the name of the malware?</h4>
 
-Googling around for the `A69S.dll` we come across MalwarebBazaar's [database](https://bazaar.abuse.ch/sample/23be1cb22c94fe77cea5f8e7fef6710eeef5a23e7e7eb9b9dd53f56d1b954269/) which suggests that the malware name is `Emotet (aka Heodo)`. We try Emotet and are rewarded with challenge complete!
+Googling around for the `A69S.dll` we come across MalwareBazaar's [database](https://bazaar.abuse.ch/sample/23be1cb22c94fe77cea5f8e7fef6710eeef5a23e7e7eb9b9dd53f56d1b954269/) which suggests that the malware name is `Emotet (aka Heodo)`. We try Emotet and are rewarded with challenge complete!
 
 <img src="/assets/images/malpowerbtlo/mal7.PNG" alt="https://blueteamlabs.online/achievement/share/challenge/14446/7">

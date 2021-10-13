@@ -1,5 +1,5 @@
 ---
-title: "Insider CyberDefenders "
+title: "Insider - CyberDefenders "
 date: 2021-10-13T17:30:30
 categories:
   - challenge
@@ -27,12 +27,15 @@ We see a `.txt` and `.ad1` file, looking inside `FirstHack.ad1.txt` we see:
 
 <img src="/assets/images/insider/ins2.PNG" alt="Contents of the .txt file.">
 
-It seems to be the details of the disk image, creation information, hashes and other important chain of custody information. No case or evidence number though, I remember that being important. Moving on we open `FirstHack.ad1` in FTK imager and see:
+It seems to be the details of the disk image, creation information, hashes and other important chain of custody information. 
+Weirdly no case or evidence number though, I remember that being important. 
+
+Moving on we open `FirstHack.ad1` in FTK Imager and see:
 
 <img src="/assets/images/insider/ins3.PNG" alt="Opening the disk image in FTK imager.">
 
 
-Now for the questions
+Now for the questions!
 
 <h4>What distribution of Linux is being used on this machine?</h4>
 
@@ -96,7 +99,7 @@ Navigating back to the apache `access.log` file we see that the file is empty wi
 
 <h4>It is believed this machine was used to attack another. What file proves this?</h4>
 
-On the root desktop we find a file called `irZLAohL.jpeg` which appears to be a screenshot of another user's windows machine. Considering this drive is running Kali linux, this suggests an attack on another. 
+On the root desktop we find a file called `irZLAohL.jpeg` which appears to be a screenshot of another user's windows machine. Considering our image is running Kali linux, this suggests an attack on another machine. 
 
 <img src="/assets/images/insider/ins13.PNG" alt="Suspicious screenshot.">
 

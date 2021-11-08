@@ -23,7 +23,7 @@ We begin by unzipping the challenge files:
 
 <img src="/assets/images/iloveyou/ily0.PNG" alt="Unzipping the file.">
 
-We see a file named `LOVE-LETTER-FOR-YOU.TXT.vbs.txt`. Seems like we won't have to use GHIDRA:
+We see a file named `LOVE-LETTER-FOR-YOU.TXT.vbs.txt`. Seems like we won't have to use Ghidra:
 
 
 <img src="/assets/images/iloveyou/ily1.PNG" alt="Catting the file.">

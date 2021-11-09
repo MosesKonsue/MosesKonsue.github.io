@@ -92,7 +92,7 @@ From here more googling leads us to a list of template engines usable by Express
 
 We google for "Nunjucks SSTI" and find a nice [breakout guide](http://disse.cting.org/2016/08/02/2016-08-02-sandbox-break-out-nunjucks-template-engine).
 
-We see that we can use `{{range.constructor("return global.process.mainModule.require('child_process').execSync('tail /etc/passwd')")()}}` to print `/etc/passwd`. Changing this to an email format and adding `\` between the double quotes to prevent errors:
+There exists a way to print `/etc/passwd`. Changing this to an email format and adding `\` between the double quotes to prevent errors:
 
 <img src="/assets/images/nunchucks/nunchuck6.PNG" alt="Returns /etc/passwd">
 

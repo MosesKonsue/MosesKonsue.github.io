@@ -110,7 +110,7 @@ We catch this shell, navigate to `/home/david` and see the `user.txt` right ther
 
 <h2>Privilege Escalation</h2>
 
-From here we notice that the box has a `SUID` tag on it, and use `getcap -r / 2>/dev/null` like so:
+From here we notice that the box has a `SUID` tag on it, and run `getcap -r / 2>/dev/null` to find out what has what capabilities:
 
 <img src="/assets/images/nunchucks/nunchuck8.PNG" alt="Good old setuid.">
 

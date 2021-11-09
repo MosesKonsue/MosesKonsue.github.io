@@ -124,13 +124,13 @@ Being completely stuck I check out a great writeup from [0xdf](https://0xdf.gitl
 
 AppArmor would have revealed itself if I attempted to run the perl one liner in a script instead. Returning the following:
 
-```bash
+```
 Can't open perl script "x": Permission denied
 ```
 
 0xdf points out through their research they found that there is a [bug](https://bugs.launchpad.net/apparmor/+bug/1911431). This bug means that AppArmor will prevent execution when the binary is invoked via path, but if it's invoked by a SheBang(#) no such protection is offered.
 
-This means we can create a script in `/tmp` with our one liner that looks like:
+This means we can create a script version of the one liner in `/tmp` that looks like:
 
 ```perl
 #!/usr/bin/perl

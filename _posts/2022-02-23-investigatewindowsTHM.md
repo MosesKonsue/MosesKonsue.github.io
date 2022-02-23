@@ -22,7 +22,7 @@ The room has guided questions to answer to complete it. We're using [rdesktop](h
 
 <h2>Questions</h2>
 
-<h4>Whats the version and year of the windows machine?</h4>
+<h4>What's the version and year of the windows machine?</h4>
 This can be seen with Powershell command `systeminfo`.
 
 <img src="/assets/images/investigatingwindows/iw1.PNG" alt="systeminfo.">
@@ -72,12 +72,14 @@ Scheduled task? Gotta go to `Task Scheduler`. We see a few tasks scheduled to ru
 <h4>When did Jenny last logon?</h4>
 
 We run `net user Jenny` and see:
+
 <img src="/assets/images/investigatingwindows/iw7.PNG" alt="Never...">
 **Never**
 
 <h4>At what date did the compromise take place?</h4>
 
 We can see that the suspicious tasks were created on **`03/02/2019`**
+
 <img src="/assets/images/investigatingwindows/iw8.PNG" alt="Tasks were created 03/02/2019.">
 
 <h4>At what time did Windows first assign special privileges to a new logon?</h4>
@@ -94,19 +96,23 @@ We remember seeing earlier that a task called `GameOver` ran the .exe `mim.exe`.
 <h4>What was the attackers external control and command servers IP?</h4>
 
 To find this we can look at the windows `hosts` file which can be found at: `c:\Windows\System32\Drivers\etc\hosts`. Here we see that the domain `google.com` is pointing at **76.32.97.132** which is definitely not supposed to be the case. 
+
 <img src="/assets/images/investigatingwindows/iw10.PNG" alt="Hosts file.">
 
 <h4>What was the extension name of the shell uploaded via the servers website?</h4>
 
 The Windows webserver is commonly `IIS` we know that uploaded files are stored in  `c:/inetpub/wwwroot`:
+
 <img src="/assets/images/investigatingwindows/iw11.PNG" alt="shell.gif">
+
 And see that a file called shell.gif is there, which is a nice red herring, but the actual answer is **.jsp**.
 
 <h4>What was the last port the attacker opened?</h4>
 
 We check the `Windows Firewall with Advance Security` `Inbound Rules` and see right at the top... **1337**. Nice.
+
 <img src="/assets/images/investigatingwindows/iw12.PNG" alt="Group membership.">
-****
+
 <h4>Check for DNS poisoning, what site was targeted?</h4>
 
 We saw it earlier, the domain **google.com** was pointed to another IP. More information [here](https://www.cloudflare.com/en-gb/learning/dns/dns-cache-poisoning/).

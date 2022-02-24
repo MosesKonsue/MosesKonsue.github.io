@@ -23,6 +23,7 @@ The room has guided questions to answer to complete it. We're using [rdesktop](h
 <h2>Questions</h2>
 
 <h4>What's the version and year of the windows machine?</h4>
+
 This can be seen with Powershell command `systeminfo`.
 
 <img src="/assets/images/investigatingwindows/iw1.PNG" alt="systeminfo.">
@@ -65,8 +66,11 @@ Scheduled task? Gotta go to `Task Scheduler`. We see a few tasks scheduled to ru
 <img src="/assets/images/investigatingwindows/iw6.PNG" alt="Netcat listner.">
 
 *What file was the task trying to run daily?*
+
 **nc.ps1**
+
 *What port did this file listen locally for?*
+
 **1348**
 
 <h4>When did Jenny last logon?</h4>
@@ -74,6 +78,7 @@ Scheduled task? Gotta go to `Task Scheduler`. We see a few tasks scheduled to ru
 We run `net user Jenny` and see:
 
 <img src="/assets/images/investigatingwindows/iw7.PNG" alt="Never...">
+
 **Never**
 
 <h4>At what date did the compromise take place?</h4>

@@ -24,11 +24,11 @@ First we unzip the challenge:
 
 <img src="/assets/images/bruteforce/bru0.PNG" alt="Unzipping the file.">
 
-After reading the Read Me file we have a lok at the challenge files, firstly the `csv`:
+After reading the Read Me file we have a look at the challenge files, firstly the `csv`:
 
 <img src="/assets/images/bruteforce/bru1.PNG" alt="Windows audit log.">
 
-We see a `csv` full of event 4625 "An account failed to log on" error audit log events. The other `txt` file contains the same audit events in case you want to parse through them another way. And the .evtx file is the windows event log file. We'll try and work with the `txt` file just by my preference.
+We see a `csv` full of event 4625 "An account failed to log on" error audit log events. The other `txt` file contains the same audit events in case you want to parse through them another way. And the `.evtx` file is the windows event log file. We'll try and work with the `txt` file just by my preference.
 
 Now on to the questions:
 

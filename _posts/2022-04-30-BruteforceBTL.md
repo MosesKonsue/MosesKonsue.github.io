@@ -42,6 +42,7 @@ We can find how many events there are by looking for the full title of the event
 <h4>What is the username of the local account that is being targeted?</h4>
 
 Looking at the first failure event we immediately see the name. **administrator**
+
 <img src="/assets/images/bruteforce/bru3.PNG" alt="administor">
 
 <h4>What is the failure reason related to the Audit Failure logs?</h4>

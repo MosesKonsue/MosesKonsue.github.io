@@ -21,7 +21,7 @@ We begin by unzipping the challenge files:
 
 We see a file named `sshlog.log`, I think I'll see if I can just `cat` , `cut` , `grep` my way through this challenge. We quickly glance at the contents with cat:
 
-<img src="/assets/images/SecureShell/sh1.PNG" alt="Cat.">
+<img src="/assets/images/SecureShell/sh1.PNG" alt="Cat">
 
 Now on to the questions:
 

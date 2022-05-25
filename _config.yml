@@ -60,7 +60,7 @@ author:
   name   : "Moses Konsue"
   avatar : "/assets/images/bio-photo.jpg"
   bio    : "Forensic Science BSc with First-Class Honours from the University of Kent. 
-  These are my personal notes while learning Cybersecurity."
+  These are my personal notes while learning Cybersecurity!"
   links:
     - label: "GitHub"
       icon: "fab fa-fw fa-github"
